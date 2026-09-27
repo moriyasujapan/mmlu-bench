@@ -6,6 +6,7 @@
 results/<ハンドル>/<タグ>/summary.json    必須（summarize.py の出力）
 results/<ハンドル>/<タグ>/run-info.json   必須（測定条件）
 results/<ハンドル>/<タグ>/accuracy.svg    任意（教科別正答率の図）
+results/<ハンドル>/<タグ>/speed.json      任意（measure-speed.py の TTFT / decode）
 ```
 
 - ハンドルとタグに使える文字は `A-Z a-z 0-9 . _ -` だけです。

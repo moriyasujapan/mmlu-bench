@@ -1,0 +1,65 @@
+{
+  "date": "2026-09-27T22:27:29+0900",
+  "machine": "2x NVIDIA CMP 170HX (64GB) — vLLM TP=2",
+  "model": "flash-next-w4a16",
+  "prompt_tokens": 492,
+  "gen_tokens_requested": 128,
+  "completion_tokens_median": 128,
+  "runs": 5,
+  "extra_body": null,
+  "ttft_ms": {
+    "median": 428.24,
+    "mean": 408.01,
+    "min": 327.81,
+    "max": 429.6
+  },
+  "decode_tok_s": {
+    "median": 102.34,
+    "mean": 96.62,
+    "min": 53.38,
+    "max": 118.06
+  },
+  "prefill_tok_s_median": 1148.9,
+  "samples": [
+    {
+      "ttft_ms": 429.405623999628,
+      "total_ms": 1670.7169679975777,
+      "completion_tokens": 128,
+      "prompt_tokens": 492,
+      "decode_tok_s": 102.31115715978648,
+      "prefill_tok_s": 1145.769809480712
+    },
+    {
+      "ttft_ms": 429.60269800096285,
+      "total_ms": 1670.5426139997144,
+      "completion_tokens": 128,
+      "prompt_tokens": 492,
+      "decode_tok_s": 102.34178009963198,
+      "prefill_tok_s": 1145.2442042133016
+    },
+    {
+      "ttft_ms": 425.0140860021929,
+      "total_ms": 1611.6295749998244,
+      "completion_tokens": 128,
+      "prompt_tokens": 492,
+      "decode_tok_s": 107.0270876939931,
+      "prefill_tok_s": 1157.6086915798396
+    },
+    {
+      "ttft_ms": 428.236850999383,
+      "total_ms": 1503.951059999963,
+      "completion_tokens": 128,
+      "prompt_tokens": 492,
+      "decode_tok_s": 118.06109739685657,
+      "prefill_tok_s": 1148.8969219996175
+    },
+    {
+      "ttft_ms": 327.81312099905335,
+      "total_ms": 2706.9867069985776,
+      "completion_tokens": 128,
+      "prompt_tokens": 492,
+      "decode_tok_s": 53.37987978151057,
+      "prefill_tok_s": 1500.8551167828964
+    }
+  ]
+}

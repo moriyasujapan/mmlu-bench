@@ -112,7 +112,7 @@ def validate_entry(handle, tag, tdir):
         warnings.append(f"{rel}: 抽出失敗が {s['n_unparsed']}/{n} 問あります。"
                         "BENCH_MAX_TOKENS を増やして測り直すと正答率が上がるかもしれません")
 
-    for fn in ("summary.json", "run-info.json"):
+    for fn in ("summary.json", "run-info.json", "speed.json"):
         p = os.path.join(tdir, fn)
         if os.path.isfile(p):
             try:
@@ -134,6 +134,16 @@ def collect():
         p = os.path.join(tdir, "run-info.json")
         if os.path.isfile(p):
             info = json.load(open(p, encoding="utf-8"))
+        # speed.json は任意。あればストリーミング実測の TTFT / decode を使う。
+        # summary.json 側の応答時間は推論モデルでは「どれだけ考えたか」に
+        # 支配されるので、順位表には載せない。
+        speed = {}
+        sp = os.path.join(tdir, "speed.json")
+        if os.path.isfile(sp):
+            try:
+                speed = json.load(open(sp, encoding="utf-8"))
+            except json.JSONDecodeError:
+                speed = {}
         entries.append({
             "handle": handle,
             "tag": tag,
@@ -147,8 +157,9 @@ def collect():
             "ci": s.get("accuracy_ci95") or [None, None],
             "unparsed": s.get("n_unparsed", 0),
             "truncated": s.get("n_truncated", 0),
-            "latency_p50": (s.get("latency_ms") or {}).get("p50"),
-            "tps": s.get("output_tokens_per_sec_mean"),
+            "ttft_ms": (speed.get("ttft_ms") or {}).get("median"),
+            "decode_tps": (speed.get("decode_tok_s") or {}).get("median"),
+            "speed_gen_tokens": speed.get("gen_tokens_requested"),
             "date": s.get("date") or info.get("date", ""),
             "has_svg": os.path.isfile(os.path.join(tdir, "accuracy.svg")),
         })
@@ -180,8 +191,8 @@ def render_markdown(entries):
         rows = sorted(by_ds[ds], key=lambda e: -e["accuracy"])
         n_q = rows[0]["n"]
         out += [f"## `{ds}`（{n_q} 問 · {len(rows)} 件）", "",
-                "| # | モデル | 正答率 | 95% CI | 構成 | p50 応答 | 出力 tok/s | 打切 | 投稿者 | 詳細 |",
-                "|---|--------|--------|--------|------|----------|------------|------|--------|------|"]
+                "| # | モデル | 正答率 | 95% CI | 構成 | TTFT | decode | 打切 | 投稿者 | 詳細 |",
+                "|---|--------|--------|--------|------|------|--------|------|--------|------|"]
         for i, e in enumerate(rows, 1):
             ci = (f"{pct(e['ci'][0])} – {pct(e['ci'][1])}"
                   if e["ci"][0] is not None else "-")
@@ -189,15 +200,17 @@ def render_markdown(entries):
             model = e["model"].replace("|", r"\|")
             out.append(
                 f"| {i} | `{model}` | **{pct(e['accuracy'])}** ({e['correct']}/{e['n']}) | {ci} "
-                f"| {machine} | {num(e['latency_p50'], ' ms')} | {num(e['tps'])} "
+                f"| {machine} | {num(e['ttft_ms'], ' ms')} | {num(e['decode_tps'], ' tok/s')} "
                 f"| {e['truncated'] or '-'} | {e['handle']} | [結果]({e['dir']}/) |"
             )
         out.append("")
 
     out += ["---", "",
             "- 4 択なのでランダム回答でも 25% 前後になります。25% を有意に上回るかで見てください。",
-            "- 応答時間と tok/s は投稿者の同時実行数・ハードウェア・他の負荷に左右されます。"
-            "スループットの比較には使えません。", ""]
+            "- TTFT と decode は `measure-speed.py` による同時実行 1 での実測です"
+            "（投稿に `speed.json` がある場合のみ）。バッチ時のスループットではありません。",
+            "- 速度を本格的に比べるなら "
+            "[bench-of-us](https://github.com/jimoto-no-llm/bench-of-us) を見てください。", ""]
     return "\n".join(out)
 
 
@@ -218,15 +231,15 @@ def render_html(entries):
                 f'<td class="barcell"><div class="bar" style="width:{w:.1f}%"></div>'
                 f'<span class="val">{pct(e["accuracy"])} '
                 f'<small>({e["correct"]}/{e["n"]})</small></span></td>'
-                f'<td class="n">{num(e["latency_p50"], " ms")}</td>'
-                f'<td class="n">{num(e["tps"])}</td>'
+                f'<td class="n">{num(e["ttft_ms"], " ms")}</td>'
+                f'<td class="n">{num(e["decode_tps"], " tok/s")}</td>'
                 f'<td class="n">{html.escape(e["handle"])}</td></tr>'
             )
         sections.append(
             f'<section><h2><code>{html.escape(ds)}</code>'
             f'<span class="sub">{rows[0]["n"]} 問 · {len(rows)} 件</span></h2>'
-            f'<table><thead><tr><th>モデル</th><th>正答率</th><th>p50 応答</th>'
-            f'<th>出力 tok/s</th><th>投稿者</th></tr></thead>'
+            f'<table><thead><tr><th>モデル</th><th>正答率</th><th>TTFT</th>'
+            f'<th>decode</th><th>投稿者</th></tr></thead>'
             f'<tbody>{"".join(bars)}</tbody></table></section>'
         )
 
@@ -286,7 +299,8 @@ def render_html(entries):
 <p class="lede">MMLU による 4 択正答率。問題セットが同じもの同士でのみ比較できます。
 4 択なのでランダム回答でも 25% 前後になります。</p>
 {"".join(sections)}
-<footer>応答時間と tok/s は投稿者の環境と同時実行数に依存するため、スループットの比較には使えません。</footer>
+<footer>TTFT と decode は同時実行 1 での実測です（投稿に speed.json がある場合のみ表示）。
+バッチ時のスループットではありません。</footer>
 </div></body>
 </html>
 """

@@ -2,7 +2,7 @@
 
 ローカル LLM ユーザが、**自分の環境の LLM がどれだけ賢いか**を同じものさしで測って共有するリポジトリです。
 
-[bench-of-us](https://github.com/moriyasujapan/bench-of-us) が「速度」を集めるのに対して、
+[bench-of-us](https://github.com/jimoto-no-llm/bench-of-us) が「速度」を集めるのに対して、
 こちらは **MMLU の 4 択正答率** を集めます。量子化やバックエンドを変えたときに
 どれだけ賢さが落ちるかは、速度と違って手元では確かめにくいためです。
 
@@ -76,6 +76,7 @@ python3 run-bench.py              # 本番
 | `summary.md` | 人が読む用の結果表 |
 | `accuracy.svg` | 教科別正答率の図 |
 | `wrong-answers.json` | 間違えた問題の一覧（デバッグ用） |
+| `speed.json` | `measure-speed.py` を走らせた場合の速度（**任意で投稿**） |
 | `results.json` | promptfoo の生の出力（モデルの出力全文を含む。**投稿しない**） |
 
 ブラウザで 1 問ずつ見たいときは、実行後に表示されるコマンドで promptfoo の画面を開けます。
@@ -85,6 +86,7 @@ python3 run-bench.py              # 本番
 ```bash
 mkdir -p results/<ハンドル>/<タグ>
 cp runs/<タグ>/{summary.json,run-info.json,accuracy.svg} results/<ハンドル>/<タグ>/
+cp runs/<速度のタグ>/speed.json results/<ハンドル>/<タグ>/   # 任意
 git switch -c result/<ハンドル>-<タグ>
 git add results/
 git commit -m "<ハンドル>: <モデル名> の結果を追加"
@@ -141,6 +143,34 @@ vLLM などはリクエストのバッチ構成で数値計算の順序が変わ
 
 ---
 
+## 速度も測る（任意）
+
+`run-bench.py` が記録する応答時間は、推論モデルでは**「どれだけ考えたか」に支配され**、
+マシンの速さを表しません（今回の 280 問では平均 4650ms に対し p50 は 1351ms）。
+速さを見たいときは生成長を固定して測る `measure-speed.py` を使ってください。
+
+```bash
+python3 measure-speed.py                       # prompt 512 / 生成 128 トークン × 5 回
+python3 measure-speed.py --gen-tokens 512 --runs 10
+python3 measure-speed.py --prompt-tokens 4096  # prefill の効きを見る
+```
+
+ストリーミングで受けて **TTFT（最初のトークンまで）と decode 速度を分けて** 測ります。
+
+```
+TTFT        中央値 428.24 ms (min 327.81 / max 429.6)
+decode      中央値 102.34 tok/s (min 53.38 / max 118.06)
+prefill     中央値 1148.9 tok/s（prompt 492 トークン ÷ TTFT）
+```
+
+`runs/<タグ>/speed.json` が出るので、投稿ディレクトリにコピーすると
+順位表の TTFT / decode 列に載ります。無くても投稿はできます。
+
+これも**同時実行 1 での測定**で、バッチ時のスループットではありません。
+`prefill` は prompt トークン数 ÷ TTFT なので、KV キャッシュが効くと過大に出ます。
+
+---
+
 ## 測っているもの・測っていないもの
 
 **測っているもの**は、MMLU 4 択問題の正答率だけです。
@@ -148,9 +178,10 @@ vLLM などはリクエストのバッチ構成で数値計算の順序が変わ
 
 **測っていないもの**:
 
-- **スループット**。応答時間と tok/s も記録しますが、同時実行数 1 の 1 リクエストあたりの値で、
-  投稿者のハードウェアと同時の負荷に左右されます。速度の比較には
-  [bench-of-us](https://github.com/moriyasujapan/bench-of-us) を使ってください。
+- **バッチ時のスループット**。TTFT と decode は同時実行 1 での値で、
+  投稿者のハードウェアと同時の負荷に左右されます。並列度を上げたときの
+  総スループットやコンテキスト長ごとのスケーリングは測っていません。
+  速度を本格的に比べるなら [bench-of-us](https://github.com/jimoto-no-llm/bench-of-us) を使ってください。
 - **日本語能力**。MMLU は英語です。
 - **実務での有用性**。MMLU は多くのモデルの学習データに含まれている可能性があり
   （コンタミネーション）、高いスコアがそのまま賢さを意味するとは限りません。
@@ -166,6 +197,8 @@ make-dataset.py   MMLU を取得 → dataset/*.csv（参加者全員で共有）
 run-bench.py      .env を読む → promptfooconfig.yaml を生成 → promptfoo eval
       ↓             prompt.txt でプロンプトを組み、assert-choice.js で正誤判定
 summarize.py      results.json → summary.json / summary.md / accuracy.svg
+      ↓
+measure-speed.py  （任意）ストリーミングで TTFT / decode を測る → speed.json
       ↓
 aggregate.py      results/**/summary.json → LEADERBOARD.md / site/index.html
 ```
