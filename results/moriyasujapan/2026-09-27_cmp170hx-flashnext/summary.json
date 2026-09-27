@@ -1,0 +1,100 @@
+{
+  "tag": "core14-flashnext",
+  "date": "2026-09-27T21:54:31+0900",
+  "machine": "2x NVIDIA CMP 170HX (64GB) — vLLM TP=2",
+  "model": "flash-next-w4a16",
+  "dataset": "mmlu-core14-n20-seed42.csv",
+  "temperature": 0.0,
+  "max_tokens": 8192,
+  "seed": 42,
+  "concurrency": 1,
+  "n_questions": 280,
+  "n_correct": 255,
+  "accuracy": 0.9107,
+  "accuracy_ci95": [
+    0.8715,
+    0.9388
+  ],
+  "n_unparsed": 0,
+  "n_truncated": 6,
+  "n_error": 0,
+  "latency_ms": {
+    "mean": 4650.4,
+    "p50": 1351,
+    "p90": 7975,
+    "max": 74167
+  },
+  "output_tokens_per_sec_mean": 98.23,
+  "per_subject": {
+    "abstract_algebra": {
+      "n": 20,
+      "correct": 18,
+      "accuracy": 0.9
+    },
+    "anatomy": {
+      "n": 20,
+      "correct": 17,
+      "accuracy": 0.85
+    },
+    "astronomy": {
+      "n": 20,
+      "correct": 18,
+      "accuracy": 0.9
+    },
+    "college_computer_science": {
+      "n": 20,
+      "correct": 20,
+      "accuracy": 1.0
+    },
+    "college_mathematics": {
+      "n": 20,
+      "correct": 20,
+      "accuracy": 1.0
+    },
+    "computer_security": {
+      "n": 20,
+      "correct": 18,
+      "accuracy": 0.9
+    },
+    "econometrics": {
+      "n": 20,
+      "correct": 17,
+      "accuracy": 0.85
+    },
+    "electrical_engineering": {
+      "n": 20,
+      "correct": 17,
+      "accuracy": 0.85
+    },
+    "formal_logic": {
+      "n": 20,
+      "correct": 19,
+      "accuracy": 0.95
+    },
+    "high_school_physics": {
+      "n": 20,
+      "correct": 19,
+      "accuracy": 0.95
+    },
+    "international_law": {
+      "n": 20,
+      "correct": 18,
+      "accuracy": 0.9
+    },
+    "machine_learning": {
+      "n": 20,
+      "correct": 18,
+      "accuracy": 0.9
+    },
+    "philosophy": {
+      "n": 20,
+      "correct": 17,
+      "accuracy": 0.85
+    },
+    "professional_medicine": {
+      "n": 20,
+      "correct": 19,
+      "accuracy": 0.95
+    }
+  }
+}
