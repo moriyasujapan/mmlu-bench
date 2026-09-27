@@ -13,6 +13,7 @@ promptfoo の状態（評価 DB・キャッシュ・node_modules・npm キャッ
 """
 
 import argparse
+import csv
 import json
 import os
 import shutil
@@ -168,17 +169,18 @@ def main():
 
     # --limit は元の CSV を壊さないよう run_dir 側に切り出す
     if args.limit:
-        import csv as _csv
         trimmed = os.path.join(run_dir, "dataset-limited.csv")
         with open(dataset, encoding="utf-8", newline="") as fi:
-            r = list(_csv.DictReader(fi))
+            r = list(csv.DictReader(fi))
         with open(trimmed, "w", encoding="utf-8", newline="") as fo:
-            w = _csv.DictWriter(fo, fieldnames=r[0].keys())
+            w = csv.DictWriter(fo, fieldnames=r[0].keys())
             w.writeheader()
             w.writerows(r[: args.limit])
         dataset = trimmed
 
-    n_q = sum(1 for _ in open(dataset, encoding="utf-8")) - 1
+    # 問題文には改行が入るので、行数ではなく CSV のレコード数を数える
+    with open(dataset, encoding="utf-8", newline="") as f:
+        n_q = sum(1 for _ in csv.reader(f)) - 1
     base_url = need(env, "BENCH_BASE_URL")
     model = need(env, "BENCH_MODEL")
 
