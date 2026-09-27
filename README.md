@@ -1,4 +1,4 @@
-# quality-of-us
+# mmlu-bench
 
 ローカル LLM ユーザが、**自分の環境の LLM がどれだけ賢いか**を同じものさしで測って共有するリポジトリです。
 
@@ -184,7 +184,7 @@ promptfoo は既定でホームディレクトリ（`~/.promptfoo`, `~/.npm`）�
 このディレクトリ以下に閉じ込めています。テレメトリ送信も切っています。
 
 ```
-llm-quality-bench/
+mmlu-bench/
 ├── node_modules/    promptfoo 本体
 ├── .promptfoo/      評価 DB・キャッシュ
 ├── .npm-cache/      npm キャッシュ
@@ -195,7 +195,7 @@ llm-quality-bench/
 
 ```bash
 ./clean.sh          # 実行環境だけ消す（結果と問題セットは残す）
-rm -rf quality-of-us   # 全部消す
+rm -rf mmlu-bench   # 全部消す
 ```
 
 ---

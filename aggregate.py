@@ -238,7 +238,7 @@ def render_html(entries):
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>llm-quality-bench 順位表</title>
+<title>mmlu-bench 順位表</title>
 <style>
   :root {{
     color-scheme: light dark;
@@ -282,7 +282,7 @@ def render_html(entries):
 </style>
 </head>
 <body><div class="wrap">
-<h1>llm-quality-bench 順位表</h1>
+<h1>mmlu-bench 順位表</h1>
 <p class="lede">MMLU による 4 択正答率。問題セットが同じもの同士でのみ比較できます。
 4 択なのでランダム回答でも 25% 前後になります。</p>
 {"".join(sections)}

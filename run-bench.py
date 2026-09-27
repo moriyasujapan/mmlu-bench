@@ -7,7 +7,7 @@
 promptfoo の状態（評価 DB・キャッシュ・node_modules・npm キャッシュ）は
 すべてこのディレクトリ以下に閉じ込めてある。消したいときは
 
-  rm -rf /path/to/llm-quality-bench
+  rm -rf /path/to/mmlu-bench
 
 だけでよく、ホームディレクトリには何も残さない。
 """
@@ -113,7 +113,7 @@ def write_config(path, env, dataset, tag):
             f"        {k}: {j(v)}\n" for k, v in extra.items()
         )
     cfg = f"""# run-bench.py が .env から自動生成したファイル。直接編集しても次回上書きされる。
-description: {j(f"llm-quality-bench {tag}")}
+description: {j(f"mmlu-bench {tag}")}
 
 providers:
   - id: {j(f"{need(env, 'BENCH_PROVIDER', 'openai:chat')}:{need(env, 'BENCH_MODEL')}")}
