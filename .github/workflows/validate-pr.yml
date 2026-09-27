@@ -1,0 +1,72 @@
+name: PR の検証
+
+on:
+  pull_request:
+    paths:
+      - 'results/**'
+      - 'aggregate.py'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: 他の人の結果を書き換えていないか確認する
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+          HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          # このPRが触った results/ 配下のハンドル名を集める
+          changed=$(git diff --name-only "$BASE" "$HEAD" -- results/ || true)
+          if [ -z "$changed" ]; then
+            echo "results/ への変更はありません。"; exit 0
+          fi
+          echo "$changed"
+          handles=$(echo "$changed" | awk -F/ 'NF>1 {print $2}' | sort -u)
+          n=$(echo "$handles" | grep -c . || true)
+          if [ "$n" -gt 1 ]; then
+            echo "::error::1 つの PR で複数のハンドル ($(echo $handles | tr '\n' ' ')) の結果を変更しています。自分の分だけにしてください。"
+            exit 1
+          fi
+          # 既存ファイルの削除・改変を禁止する（追加のみ許可）
+          modified=$(git diff --name-only --diff-filter=MD "$BASE" "$HEAD" -- results/ || true)
+          if [ -n "$modified" ]; then
+            echo "::error::既存の結果を変更または削除しています:"
+            echo "$modified"
+            echo "::error::過去の投稿は編集せず、新しいタグで追加してください。"
+            exit 1
+          fi
+
+      - name: 巨大なファイルや余計なファイルが含まれていないか確認する
+        run: |
+          # モデルファイルやプロンプト・出力の生ログを誤って含めないようにする
+          bad=$(find results -type f \( -name '*.gguf' -o -name '*.safetensors' -o -name '*.bin' \
+                -o -name 'server-*.log' -o -name '*.env' \) 2>/dev/null || true)
+          if [ -n "$bad" ]; then
+            echo "::error::コミットしてはいけないファイルがあります:"; echo "$bad"; exit 1
+          fi
+          big=$(find results -type f -size +2M 2>/dev/null || true)
+          if [ -n "$big" ]; then
+            echo "::error::2MB を超えるファイルがあります。summary.json と run-info.json だけにしてください:"
+            echo "$big"; exit 1
+          fi
+
+      - name: summary.json の内容と個人情報を検証する
+        run: python3 aggregate.py --validate
+
+      - name: 順位表を生成できるか確認する
+        run: |
+          python3 aggregate.py
+          echo '### この PR がマージされたあとの順位表' >> "$GITHUB_STEP_SUMMARY"
+          echo '' >> "$GITHUB_STEP_SUMMARY"
+          cat LEADERBOARD.md >> "$GITHUB_STEP_SUMMARY"

@@ -1,0 +1,60 @@
+name: 順位表の更新と公開
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'results/**'
+      - 'aggregate.py'
+  workflow_dispatch:
+
+# 同時に走らせない（LEADERBOARD.md の commit が競合するため）
+concurrency:
+  group: leaderboard
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: 集約する
+        run: python3 aggregate.py
+
+      - name: LEADERBOARD.md を commit する
+        run: |
+          # 生成物だけを add する。paths フィルタに LEADERBOARD.md を
+          # 含めていないので、この commit でこのワークフローは再帰しない。
+          git config user.name  'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          git add LEADERBOARD.md
+          if git diff --cached --quiet; then
+            echo "順位表に変更はありません。"
+          else
+            git commit -m '順位表を更新'
+            git push
+          fi
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - id: deploy
+        uses: actions/deploy-pages@v4

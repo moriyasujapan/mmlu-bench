@@ -1,0 +1,9 @@
+Answer the following multiple-choice question.
+Respond with only the single letter (A, B, C, or D) of the correct answer. Do not explain.
+
+Question: {{question}}
+A. {{A}}
+B. {{B}}
+C. {{C}}
+D. {{D}}
+Answer:

@@ -1,0 +1,14 @@
+# 実行環境（clean.sh で消せる）
+node_modules/
+package-lock.json
+.promptfoo/
+.npm-cache/
+
+# 個人設定
+.env
+
+# 手元の測定結果。投稿するものだけ results/ にコピーする
+runs/
+
+# CI が生成する公開用サイト
+site/

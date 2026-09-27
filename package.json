@@ -1,0 +1,9 @@
+{
+  "name": "llm-quality-bench",
+  "version": "0.1.0",
+  "private": true,
+  "description": "OpenAI 互換 API を喋る LLM アプリを MMLU で定量評価する",
+  "dependencies": {
+    "promptfoo": "0.123.1"
+  }
+}
