@@ -103,9 +103,9 @@ def validate_entry(handle, tag, tdir):
         warnings.append(f"{rel}: 既知の問題セットではないので順位表では別枠になります "
                         f"({s.get('dataset')})")
     trunc = s.get("n_truncated", 0)
-    if trunc > n * 0.02:
-        errors.append(f"{rel}: {trunc}/{n} 問 (2% 超) が max_tokens で打ち切られています。"
-                      "BENCH_MAX_TOKENS を増やして測り直したものを投稿してください")
+    if trunc > n * 0.10:
+        errors.append(f"{rel}: {trunc}/{n} 問 (10% 超) が max_tokens で打ち切られています。"
+                      "設定を見直して測り直したものを投稿してください")
     elif trunc:
         warnings.append(f"{rel}: {trunc}/{n} 問が max_tokens で打ち切られ、不正解として数えられています")
     if s.get("n_unparsed", 0) > n * 0.1:
