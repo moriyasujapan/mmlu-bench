@@ -1,0 +1,15 @@
+{
+  "tag": "core14-flashnext",
+  "date": "2026-09-27T21:54:31+0900",
+  "machine": "2x NVIDIA CMP 170HX (64GB) — vLLM TP=2",
+  "model": "flash-next-w4a16",
+  "base_url": "http://localhost:18024/v1",
+  "provider": "openai:chat",
+  "dataset": "mmlu-core14-n20-seed42.csv",
+  "n_questions": 280,
+  "temperature": 0.0,
+  "max_tokens": 8192,
+  "extra_body": null,
+  "seed": 42,
+  "concurrency": 1
+}

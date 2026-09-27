@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="466" viewBox="0 0 760 466" font-family="DejaVu Sans, sans-serif">
+<rect width="760" height="466" fill="#ffffff"/>
+<text x="16" y="26" font-size="15" font-weight="bold" fill="#1f2933">flash-next-w4a16 — MMLU 教科別正答率</text>
+<text x="16" y="44" font-size="11" fill="#69707d">横軸 = 正答率 (%)　破線 = 4 択のランダム正答 25%</text>
+<line x1="240.0" y1="56" x2="240.0" y2="420" stroke="#d9dee3" stroke-width="1" />
+<text x="240.0" y="436" font-size="10" fill="#69707d" text-anchor="middle">0</text>
+<line x1="355.0" y1="56" x2="355.0" y2="420" stroke="#c0392b" stroke-width="1" stroke-dasharray="4 3"/>
+<text x="355.0" y="436" font-size="10" fill="#69707d" text-anchor="middle">25</text>
+<line x1="470.0" y1="56" x2="470.0" y2="420" stroke="#d9dee3" stroke-width="1" />
+<text x="470.0" y="436" font-size="10" fill="#69707d" text-anchor="middle">50</text>
+<line x1="585.0" y1="56" x2="585.0" y2="420" stroke="#d9dee3" stroke-width="1" />
+<text x="585.0" y="436" font-size="10" fill="#69707d" text-anchor="middle">75</text>
+<line x1="700.0" y1="56" x2="700.0" y2="420" stroke="#d9dee3" stroke-width="1" />
+<text x="700.0" y="436" font-size="10" fill="#69707d" text-anchor="middle">100</text>
+<text x="232" y="71" font-size="11" fill="#1f2933" text-anchor="end">abstract_algebra</text>
+<rect x="240" y="60" width="414.0" height="15" fill="#4c7ef3" rx="2"/>
+<text x="660.0" y="72" font-size="10" fill="#69707d">90.0% (18/20)</text>
+<text x="232" y="97" font-size="11" fill="#1f2933" text-anchor="end">anatomy</text>
+<rect x="240" y="86" width="391.0" height="15" fill="#4c7ef3" rx="2"/>
+<text x="637.0" y="98" font-size="10" fill="#69707d">85.0% (17/20)</text>
+<text x="232" y="123" font-size="11" fill="#1f2933" text-anchor="end">astronomy</text>
+<rect x="240" y="112" width="414.0" height="15" fill="#4c7ef3" rx="2"/>
+<text x="660.0" y="124" font-size="10" fill="#69707d">90.0% (18/20)</text>
+<text x="232" y="149" font-size="11" fill="#1f2933" text-anchor="end">college_computer_science</text>
+<rect x="240" y="138" width="460.0" height="15" fill="#4c7ef3" rx="2"/>
+<text x="706.0" y="150" font-size="10" fill="#69707d">100.0% (20/20)</text>
+<text x="232" y="175" font-size="11" fill="#1f2933" text-anchor="end">college_mathematics</text>
+<rect x="240" y="164" width="460.0" height="15" fill="#4c7ef3" rx="2"/>
+<text x="706.0" y="176" font-size="10" fill="#69707d">100.0% (20/20)</text>
+<text x="232" y="201" font-size="11" fill="#1f2933" text-anchor="end">computer_security</text>
+<rect x="240" y="190" width="414.0" height="15" fill="#4c7ef3" rx="2"/>
+<text x="660.0" y="202" font-size="10" fill="#69707d">90.0% (18/20)</text>
+<text x="232" y="227" font-size="11" fill="#1f2933" text-anchor="end">econometrics</text>
+<rect x="240" y="216" width="391.0" height="15" fill="#4c7ef3" rx="2"/>
+<text x="637.0" y="228" font-size="10" fill="#69707d">85.0% (17/20)</text>
+<text x="232" y="253" font-size="11" fill="#1f2933" text-anchor="end">electrical_engineering</text>
+<rect x="240" y="242" width="391.0" height="15" fill="#4c7ef3" rx="2"/>
+<text x="637.0" y="254" font-size="10" fill="#69707d">85.0% (17/20)</text>
+<text x="232" y="279" font-size="11" fill="#1f2933" text-anchor="end">formal_logic</text>
+<rect x="240" y="268" width="437.0" height="15" fill="#4c7ef3" rx="2"/>
+<text x="683.0" y="280" font-size="10" fill="#69707d">95.0% (19/20)</text>
+<text x="232" y="305" font-size="11" fill="#1f2933" text-anchor="end">high_school_physics</text>
+<rect x="240" y="294" width="437.0" height="15" fill="#4c7ef3" rx="2"/>
+<text x="683.0" y="306" font-size="10" fill="#69707d">95.0% (19/20)</text>
+<text x="232" y="331" font-size="11" fill="#1f2933" text-anchor="end">international_law</text>
+<rect x="240" y="320" width="414.0" height="15" fill="#4c7ef3" rx="2"/>
+<text x="660.0" y="332" font-size="10" fill="#69707d">90.0% (18/20)</text>
+<text x="232" y="357" font-size="11" fill="#1f2933" text-anchor="end">machine_learning</text>
+<rect x="240" y="346" width="414.0" height="15" fill="#4c7ef3" rx="2"/>
+<text x="660.0" y="358" font-size="10" fill="#69707d">90.0% (18/20)</text>
+<text x="232" y="383" font-size="11" fill="#1f2933" text-anchor="end">philosophy</text>
+<rect x="240" y="372" width="391.0" height="15" fill="#4c7ef3" rx="2"/>
+<text x="637.0" y="384" font-size="10" fill="#69707d">85.0% (17/20)</text>
+<text x="232" y="409" font-size="11" fill="#1f2933" text-anchor="end">professional_medicine</text>
+<rect x="240" y="398" width="437.0" height="15" fill="#4c7ef3" rx="2"/>
+<text x="683.0" y="410" font-size="10" fill="#69707d">95.0% (19/20)</text>
+</svg>
